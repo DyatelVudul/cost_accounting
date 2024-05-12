@@ -3,7 +3,7 @@ import java.util.Collection;
 public class ExPostAverage implements AveragePriceSolver {
 
     @Override
-    public float calculatePrice(Collection<Event> events, long initialCapacity, float initialPrice) {
+    public float calculatePrice(Collection<Event> events, Long initialCapacity, float initialPrice) {
         if (events == null || events.isEmpty()) {
             return 0;
         }
