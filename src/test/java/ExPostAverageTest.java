@@ -10,8 +10,8 @@ public class ExPostAverageTest {
 
     private final static Queue<Event> events = new LinkedList<>();
     private final ExPostAverage solver = new ExPostAverage();
-    private static final long INITIAL_CAPACITY = 9780;
-    private static final float INITIAL_PRICE = 7.1F;
+    private static final Long INITIAL_CAPACITY = 9780L;
+    private static final Float INITIAL_PRICE = 7.1F;
 
     @BeforeAll
     public static void setUp() {
