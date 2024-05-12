@@ -10,8 +10,8 @@ public class ExPostAverageTest {
 
     private final static Queue<Event> events = new LinkedList<>();
     private final ExPostAverage solver = new ExPostAverage();
-    private static final Long INITIAL_CAPACITY = 9780L;
-    private static final Float INITIAL_PRICE = 7.1F;
+    private static final long INITIAL_CAPACITY = 9780L;
+    private static final float INITIAL_PRICE = 7.1F;
 
     @BeforeAll
     public static void setUp() {
@@ -26,18 +26,18 @@ public class ExPostAverageTest {
 
     @Test
     public void testExPostAverage(){
-        double price = Math.round(solver.calculatePrice(events, INITIAL_CAPACITY, INITIAL_PRICE) * 100.0) / 100.0;
+        double price = Math.round(solver.calculatePrice(events, new LongHolder(INITIAL_CAPACITY), INITIAL_PRICE) * 100.0) / 100.0;
         assertEquals(7.19, price, 0.001);
     }
 
     @Test
     public void testWhenNull(){
-        assertEquals(0, solver.calculatePrice(null, INITIAL_CAPACITY, INITIAL_PRICE));
+        assertEquals(0, solver.calculatePrice(null, new LongHolder(INITIAL_CAPACITY), INITIAL_PRICE));
     }
 
     @Test
     public void testWhenEmpty(){
         Queue<Event> empty = new LinkedList<>();
-        assertEquals(0, solver.calculatePrice(empty, INITIAL_CAPACITY, INITIAL_PRICE));
+        assertEquals(0, solver.calculatePrice(empty, new LongHolder(INITIAL_CAPACITY), INITIAL_PRICE));
     }
 }
