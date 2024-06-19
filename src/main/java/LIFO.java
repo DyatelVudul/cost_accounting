@@ -12,9 +12,10 @@ public class LIFO implements QueueSolver{
         }
 
         Queue<Tuple<Long, Double>> result = new LinkedList<>();
-        long inCapacity = initialCapacity;
 
         Stack<Event> purchases = new Stack<>();
+
+        purchases.push(new Event(initialCapacity, initialPrice));
 
         for (Event event : events) {
             if (event.getType() == EventType.PURCHASE){
@@ -24,8 +25,8 @@ public class LIFO implements QueueSolver{
 
             if (event.getType() == EventType.CONSUMPTION){
                 while (true){
-                    if (purchases.isEmpty() || event.getQuantity() == 0){ // If Consumption need 0 units or no more Purchases are available
-                        break;
+                    if (purchases.isEmpty() && event.getQuantity() > 0){ // If Consumption need 0 units or no more Purchases are available
+                        throw new RuntimeException("No more inventory available, cannot process further consumption");
                     }
 
                     Event purchase = purchases.peek();
@@ -40,15 +41,6 @@ public class LIFO implements QueueSolver{
                         event.setQuantity(event.getQuantity() - purchase.getQuantity());
                         purchases.pop();
                     }
-                }
-
-                if(event.getQuantity() > 0){ // Case if none of the purchases can satisfy Consumption
-                    if(event.getQuantity() > inCapacity){
-                        throw new RuntimeException("Cannot satisfy consumption: No more units are available");
-                    }
-
-                    inCapacity -= event.getQuantity();
-                    result.add(new Tuple<>(event.getQuantity(), initialPrice));
                 }
             }
         }
