@@ -31,7 +31,7 @@ public class LIFO implements QueueSolver{
 
                     Event purchase = purchases.peek();
 
-                    result.add(new Tuple<>(purchase.getQuantity(), purchase.getPrice()));
+                    result.add(new Tuple<>(Math.min(purchase.getQuantity(), event.getQuantity()), purchase.getPrice()));
 
                     if (purchase.getQuantity() >= event.getQuantity()){ // If Purchase can satisfy Consumption
                         purchase.setQuantity(purchase.getQuantity() - event.getQuantity());
