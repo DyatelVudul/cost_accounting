@@ -1,9 +1,10 @@
 import java.util.Collection;
+import java.util.LinkedList;
+import java.util.Queue;
 
-public class ExPostAverage implements AveragePriceSolver {
+public class ExPostAverage implements Solver {
 
-    @Override
-    public float calculatePrice(Collection<Event> events, LongHolder initialCapacity, float initialPrice) {
+    private float calculatePrice(Collection<Event> events, LongHolder initialCapacity, float initialPrice) {
         if (events == null || events.isEmpty()) {
             return 0;
         }
@@ -17,5 +18,27 @@ public class ExPostAverage implements AveragePriceSolver {
             }
         }
         return initialAmount/totalCapacity;
+    }
+
+    @Override
+    public Queue<Tuple<Long, Double>> processEvents(Collection<Event> events, long initialCapacity, double initialPrice) {
+        if(events == null || events.isEmpty()){
+            return null;
+        }
+
+        float price = Math.round(calculatePrice(events, new LongHolder(initialCapacity), (float) initialPrice) * 100.0) / 100.0f;
+
+        Queue<Tuple<Long, Double>> result = new LinkedList<>();
+
+        for (Event event: events){
+            if(event.getType() == EventType.PURCHASE){
+                continue;
+            }
+            if(event.getType() == EventType.CONSUMPTION){
+                result.add(new Tuple<>(event.getQuantity(), (double)price));
+            }
+        }
+
+        return result;
     }
 }
