@@ -1,4 +1,4 @@
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.LinkedList;
@@ -14,8 +14,8 @@ public class LIFOTest {
     private static final long INITIAL_CAPACITY = 9780L;
     private static final float INITIAL_PRICE = 7.1F;
 
-    @BeforeAll
-    public static void setUp() {
+    @BeforeEach
+    public void setUp() {
         events.add(new Event(1520, 7.3));
         events.add(new Event(1030));
         events.add(new Event(700));
@@ -33,9 +33,18 @@ public class LIFOTest {
     }
 
     @Test
-    public void testExPostAverage(){
+    public void testLIFO(){
         Queue<Tuple<Long, Double>> processes = solver.processEvents(events, INITIAL_CAPACITY, INITIAL_PRICE);
         assertEquals(referenceSolution.size(), processes.size());
+        for(int i = 0; i < referenceSolution.size(); i++){
+            Tuple<Long, Double> ref = referenceSolution.poll();
+            Tuple<Long, Double> actual = processes.poll();
+
+            assertNotNull(actual);
+
+            assertEquals(ref.f, actual.f, 0.001);
+            assertEquals(ref.s, actual.s, 0.001);
+        }
     }
 
     @Test
