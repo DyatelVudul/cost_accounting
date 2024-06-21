@@ -1,9 +1,11 @@
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Queue;
 
-public class MovingAverage implements AveragePriceSolver {
-    @Override
-    public float calculatePrice(Collection<Event> events, LongHolder initialCapacity, float initialPrice) {
+public class MovingAverage implements Solver {
+
+    private float calculatePrice(Collection<Event> events, LongHolder initialCapacity, float initialPrice) {
         if(events == null || events.isEmpty()) {
             return 0;
         }
@@ -30,5 +32,21 @@ public class MovingAverage implements AveragePriceSolver {
         }
 
         return totalAmount/totalCapacity;
+    }
+
+    @Override
+    public Queue<Tuple<Long, Double>> processEvents(Collection<Event> events, long initialCapacity, double initialPrice) {
+        if (events == null || events.isEmpty()) {
+            return null;
+        }
+
+        Queue<Tuple<Long, Double>> result = new LinkedList<>();
+
+        while (!events.isEmpty()){
+            
+            break;
+        }
+
+        return result;
     }
 }
