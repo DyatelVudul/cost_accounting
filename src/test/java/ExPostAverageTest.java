@@ -1,4 +1,4 @@
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.LinkedList;
@@ -9,12 +9,13 @@ import static org.junit.jupiter.api.Assertions.*;
 public class ExPostAverageTest {
 
     private final static Queue<Event> events = new LinkedList<>();
+    private static final Queue<Tuple<Long, Double>> referenceSolution = new LinkedList<>();
     private final ExPostAverage solver = new ExPostAverage();
     private static final long INITIAL_CAPACITY = 9780L;
     private static final float INITIAL_PRICE = 7.1F;
 
-    @BeforeAll
-    public static void setUp() {
+    @BeforeEach
+    public void setUp() {
         events.add(new Event(1520, 7.3));
         events.add(new Event(1030));
         events.add(new Event(700));
@@ -22,22 +23,37 @@ public class ExPostAverageTest {
         events.add(new Event(1360, 7.65));
         events.add(new Event(580));
         events.add(new Event(950));
+
+        referenceSolution.add(new Tuple<>(1030L, 7.19));
+        referenceSolution.add(new Tuple<>(700L, 7.19));
+        referenceSolution.add(new Tuple<>(580L, 7.19));
+        referenceSolution.add(new Tuple<>(950L, 7.19));
     }
 
     @Test
     public void testExPostAverage(){
-        double price = Math.round(solver.calculatePrice(events, new LongHolder(INITIAL_CAPACITY), INITIAL_PRICE) * 100.0) / 100.0;
-        assertEquals(7.19, price, 0.001);
+        Queue<Tuple<Long, Double>> actual = solver.processEvents(events,INITIAL_CAPACITY, INITIAL_PRICE);
+        assertEquals(referenceSolution.size(), actual.size());
+
+        for(int i = 0; i < referenceSolution.size(); i++){
+            Tuple<Long, Double> ref = referenceSolution.poll();
+            Tuple<Long, Double> act = actual.poll();
+
+            assertNotNull(act);
+
+            assertEquals(ref.f, act.f, 0.001);
+            assertEquals(ref.s, act.s, 0.001);
+        }
     }
 
     @Test
     public void testWhenNull(){
-        assertEquals(0, solver.calculatePrice(null, new LongHolder(INITIAL_CAPACITY), INITIAL_PRICE));
+        assertNull(solver.processEvents(null, INITIAL_CAPACITY, INITIAL_PRICE));
     }
 
     @Test
     public void testWhenEmpty(){
         Queue<Event> empty = new LinkedList<>();
-        assertEquals(0, solver.calculatePrice(empty, new LongHolder(INITIAL_CAPACITY), INITIAL_PRICE));
+        assertNull(solver.processEvents(empty, INITIAL_CAPACITY, INITIAL_PRICE));
     }
 }

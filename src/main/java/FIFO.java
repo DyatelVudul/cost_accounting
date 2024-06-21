@@ -1,7 +1,7 @@
 import java.util.*;
 
 
-public class FIFO implements QueueSolver {
+public class FIFO implements Solver {
 
     @Override
     public Queue<Tuple<Long, Double>> processEvents(Collection<Event> events, long initialCapacity, double initialPrice) throws RuntimeException {

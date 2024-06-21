@@ -1,50 +1,33 @@
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
 
 public class MovingAverage implements Solver {
 
-    private float calculatePrice(Collection<Event> events, LongHolder initialCapacity, float initialPrice) {
-        if(events == null || events.isEmpty()) {
-            return 0;
-        }
-
-        long initialCapacityValue = initialCapacity.getValue();
-
-        float totalAmount = initialCapacityValue * initialPrice;
-        long totalCapacity = initialCapacityValue;
-        for (Iterator<Event> iterator = events.iterator(); iterator.hasNext(); ){
-            Event event = iterator.next();
-
-            if (event.getType() == EventType.CONSUMPTION){
-                initialCapacity.setValue(initialCapacity.getValue() - event.getQuantity());
-                iterator.remove();
-                break;
-            }
-
-            if (event.getType() == EventType.PURCHASE){
-                totalCapacity += event.getQuantity();
-                initialCapacity.setValue(initialCapacity.getValue() + event.getQuantity());
-                totalAmount += (float) (event.getQuantity() * event.getPrice());
-            }
-            iterator.remove();
-        }
-
-        return totalAmount/totalCapacity;
-    }
-
     @Override
-    public Queue<Tuple<Long, Double>> processEvents(Collection<Event> events, long initialCapacity, double initialPrice) {
+    public Queue<Tuple<Long, Double>> processEvents(Collection<Event> events, long initialCapacity, double initialPrice) throws RuntimeException {
         if (events == null || events.isEmpty()) {
             return null;
         }
 
         Queue<Tuple<Long, Double>> result = new LinkedList<>();
 
-        while (!events.isEmpty()){
-            
-            break;
+        for (Event event : events) {
+            if (event.getType() == EventType.PURCHASE){
+                initialPrice = Math.round( (event.getPrice()*event.getQuantity() + initialPrice*initialCapacity)
+                        /(initialCapacity + event.getQuantity()) * 100.0) / 100.0;
+                initialCapacity += event.getQuantity();
+                continue;
+            }
+
+            if (event.getQuantity() > initialCapacity){
+                throw new RuntimeException("Not enough Inventory to satisfy Consumption");
+            }
+
+            if (event.getType() == EventType.CONSUMPTION){
+                result.add(new Tuple<>(event.getQuantity(), initialPrice));
+                initialCapacity -= event.getQuantity();
+            }
         }
 
         return result;
