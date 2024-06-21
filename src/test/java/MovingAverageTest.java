@@ -4,12 +4,15 @@ import org.junit.jupiter.api.Test;
 import java.util.LinkedList;
 import java.util.Queue;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class MovingAverageTest {
 
     private final static Queue<Event> events = new LinkedList<>();
     private final MovingAverage solver = new MovingAverage();
+    private static final Queue<Tuple<Long, Double>> referenceSolution = new LinkedList<>();
+    private static final long INITIAL_CAPACITY = 9780L;
+    private static final double INITIAL_PRICE = 7.1;
 
     @BeforeAll
     public static void setUp() {
@@ -20,49 +23,39 @@ public class MovingAverageTest {
         events.add(new Event(1360, 7.65));
         events.add(new Event(580));
         events.add(new Event(950));
+
+        referenceSolution.add(new Tuple<>(1030L, 7.13));
+        referenceSolution.add(new Tuple<>(700L, 7.13));
+        referenceSolution.add(new Tuple<>(580L, 7.20));
+        referenceSolution.add(new Tuple<>(950L, 7.20));
     }
 
     @Test
     public void testMovingPostAverage(){
-        LongHolder initialCapacity = new LongHolder(9780);
-        float initialPrice = 7.10f;
+        Queue<Tuple<Long, Double>> actual = solver.processEvents(events, INITIAL_CAPACITY, INITIAL_PRICE);
 
-        initialPrice = (float) (Math.round(solver.calculatePrice(events, initialCapacity, initialPrice) * 100.0) / 100.0);
+        assertEquals(referenceSolution.size(), actual.size());
 
-        // First Iteration
-        assertEquals(7.13, initialPrice, 0.001);
-        assertEquals(5, events.size());
-        assertEquals(10270, initialCapacity.getValue());
+        for (int i = 0; i < referenceSolution.size(); i++) {
+            Tuple<Long, Double> ref = referenceSolution.poll();
+            Tuple<Long, Double> act = actual.poll();
 
-        // Second Iteration
-        initialPrice = (float) (Math.round(solver.calculatePrice(events, initialCapacity, initialPrice) * 100.0) / 100.0);
-        assertEquals(7.13, initialPrice, 0.001);
-        assertEquals(4, events.size());
-        assertEquals(9570, initialCapacity.getValue());
+            assertNotNull(act);
 
-        // Third Iteration
-        initialPrice = (float) (Math.round(solver.calculatePrice(events, initialCapacity, initialPrice) * 100.0) / 100.0);
-        assertEquals(7.20, initialPrice, 0.001);
-        assertEquals(1, events.size());
-        assertEquals(11190, initialCapacity.getValue());
-
-        // Fourth Iteration
-        initialPrice = (float) (Math.round(solver.calculatePrice(events, initialCapacity, initialPrice) * 100.0) / 100.0);
-        assertEquals(7.20, initialPrice, 0.001);
-        assertEquals(0, events.size());
-        assertEquals(10240, initialCapacity.getValue());
-
+            assertEquals(ref.f, act.f);
+            assertEquals(ref.s, act.s);
+        }
     }
 
     @Test
     public void testWhenNull(){
-        assertEquals(0, solver.calculatePrice(null, new LongHolder(0L), 0F));
+        assertNull(solver.processEvents(null, 0L, 0F));
     }
 
     @Test
     public void testWhenEmpty(){
         Queue<Event> empty = new LinkedList<>();
-        assertEquals(0, solver.calculatePrice(empty, new LongHolder(0L), 0F));
+        assertNull(solver.processEvents(empty, 0L, 0F));
     }
 
 }

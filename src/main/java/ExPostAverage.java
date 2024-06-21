@@ -4,12 +4,12 @@ import java.util.Queue;
 
 public class ExPostAverage implements Solver {
 
-    private float calculatePrice(Collection<Event> events, LongHolder initialCapacity, float initialPrice) {
+    private double calculatePrice(Collection<Event> events, LongHolder initialCapacity, double initialPrice) {
         if (events == null || events.isEmpty()) {
             return 0;
         }
 
-        float initialAmount = initialCapacity.getValue() * initialPrice;
+        double initialAmount = initialCapacity.getValue() * initialPrice;
         long totalCapacity = initialCapacity.getValue();
         for (Event event: events){
             if (event.getType() == EventType.PURCHASE){
@@ -26,7 +26,7 @@ public class ExPostAverage implements Solver {
             return null;
         }
 
-        float price = Math.round(calculatePrice(events, new LongHolder(initialCapacity), (float) initialPrice) * 100.0) / 100.0f;
+        float price = Math.round(calculatePrice(events, new LongHolder(initialCapacity), initialPrice) * 100.0) / 100.0f;
 
         Queue<Tuple<Long, Double>> result = new LinkedList<>();
 
