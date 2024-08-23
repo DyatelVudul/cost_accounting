@@ -27,3 +27,5 @@ replay_pid*
 .gradle
 build
 .devcontainer
+.DS_Store
+dependabot.yml

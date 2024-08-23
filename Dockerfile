@@ -1,25 +1,35 @@
 FROM ubuntu:latest
 USER root
 
-RUN apt-get update && apt-get upgrade -y --no-install-recommends \
-    build-essential
+# Update and upgrade apt packages
+RUN apt-get update && apt-get upgrade -y --no-install-recommends
 
-RUN apt install openjdk-17-jdk -y
+# Install required packages
+RUN apt-get install -y \
+    build-essential \
+    openjdk-17-jdk \
+    vim
 
-RUN apt install vim -y
-
+# Set environment variable for the working directory
 ENV CA_WD=/home/developer/cost_accounting
 
-RUN groupadd developers
+# Create a developers group and a developer user
+RUN groupadd developers && \
+    useradd -m -g developers developer
 
-RUN useradd -m -g developers developer
+# Create and set permissions for the working directory
+RUN mkdir -p $CA_WD && \
+    chown developer:developers $CA_WD && \
+    chmod 770 $CA_WD
 
-RUN mkdir $CA_WD && chown developer:developers $CA_WD && chmod 770 $CA_WD
-
+# Switch to developer user
 USER developer
 
+# Set working directory
 WORKDIR $CA_WD
 
+# Copy files into the working directory
 COPY . $CA_WD
 
-CMD [ "bash" ]
+# Default command
+CMD ["bash"]

@@ -1,3 +1,8 @@
+package InventoryValuationTests;
+
+import InventoryValuation.Event;
+import InventoryValuation.EventFactory;
+import InventoryValuation.EventType;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

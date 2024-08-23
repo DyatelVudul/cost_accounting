@@ -1,3 +1,5 @@
+package InventoryValuation;
+
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -21,7 +23,7 @@ public class MovingAverage implements Solver {
             }
 
             if (event.getQuantity() > initialCapacity){
-                throw new RuntimeException("Not enough Inventory to satisfy Consumption");
+                throw new RuntimeException("Not enough InventoryValuation.Inventory to satisfy Consumption");
             }
 
             if (event.getType() == EventType.CONSUMPTION){

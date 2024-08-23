@@ -1,3 +1,8 @@
+package InventoryValuationTests;
+
+import InventoryValuation.Event;
+import InventoryValuation.EventType;
+import InventoryValuation.Inventory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
