@@ -1,3 +1,5 @@
+package InventoryValuation;
+
 import java.util.Queue;
 
 public class Inventory {

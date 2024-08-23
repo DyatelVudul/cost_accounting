@@ -1,3 +1,8 @@
+package InventoryValuationTests;
+
+import InventoryValuation.Event;
+import InventoryValuation.ExPostAverage;
+import InventoryValuation.Tuple;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -6,10 +11,11 @@ import java.util.Queue;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class FIFOTest {
+public class ExPostAverageTest {
+
     private final static Queue<Event> events = new LinkedList<>();
-    private final FIFO solver = new FIFO();
-    private final static Queue<Tuple<Long,Double>> referenceSolution = new LinkedList<>();
+    private static final Queue<Tuple<Long, Double>> referenceSolution = new LinkedList<>();
+    private final ExPostAverage solver = new ExPostAverage();
     private static final long INITIAL_CAPACITY = 9780L;
     private static final float INITIAL_PRICE = 7.1F;
 
@@ -23,24 +29,25 @@ public class FIFOTest {
         events.add(new Event(580));
         events.add(new Event(950));
 
-        referenceSolution.add(new Tuple<>(1030L, 7.1));
-        referenceSolution.add(new Tuple<>(700L, 7.1));
-        referenceSolution.add(new Tuple<>(580L, 7.1));
-        referenceSolution.add(new Tuple<>(950L, 7.1));
+        referenceSolution.add(new Tuple<>(1030L, 7.19));
+        referenceSolution.add(new Tuple<>(700L, 7.19));
+        referenceSolution.add(new Tuple<>(580L, 7.19));
+        referenceSolution.add(new Tuple<>(950L, 7.19));
     }
 
     @Test
-    public void testFIFO(){
-        Queue<Tuple<Long, Double>> processes = solver.processEvents(events, INITIAL_CAPACITY, INITIAL_PRICE);
-        assertEquals(referenceSolution.size(), processes.size());
+    public void testExPostAverage(){
+        Queue<Tuple<Long, Double>> actual = solver.processEvents(events,INITIAL_CAPACITY, INITIAL_PRICE);
+        assertEquals(referenceSolution.size(), actual.size());
+
         for(int i = 0; i < referenceSolution.size(); i++){
             Tuple<Long, Double> ref = referenceSolution.poll();
-            Tuple<Long, Double> actual = processes.poll();
+            Tuple<Long, Double> act = actual.poll();
 
-            assertNotNull(actual);
+            assertNotNull(act);
 
-            assertEquals(ref.f, actual.f, 0.001);
-            assertEquals(ref.s, actual.s, 0.001);
+            assertEquals(ref.f, act.f, 0.001);
+            assertEquals(ref.s, act.s, 0.001);
         }
     }
 

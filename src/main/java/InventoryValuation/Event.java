@@ -1,3 +1,5 @@
+package InventoryValuation;
+
 public class Event {
     private EventType type;
     private long quantity;

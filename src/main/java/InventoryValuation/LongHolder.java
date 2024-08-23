@@ -1,3 +1,5 @@
+package InventoryValuation;
+
 public class LongHolder {
     private long value;
 

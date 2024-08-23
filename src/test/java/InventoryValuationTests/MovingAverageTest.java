@@ -1,3 +1,8 @@
+package InventoryValuationTests;
+
+import InventoryValuation.Event;
+import InventoryValuation.MovingAverage;
+import InventoryValuation.Tuple;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 

@@ -1,3 +1,5 @@
+package InventoryValuation;
+
 public class Tuple <First, Second>{
     public final First f;
     public final Second s;
